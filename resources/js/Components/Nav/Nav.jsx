@@ -12,6 +12,10 @@ const navItems = [
         href: "invoice.index",
         text: "Faktury"
     },
+    {
+        href: "allegro.index",
+        text: "Allegro"
+    },
 ];
 
 export default function Nav(props) {

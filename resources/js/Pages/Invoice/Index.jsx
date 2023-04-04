@@ -1,17 +1,28 @@
 import React from "react";
 import App from "../../Layouts/App";
 
-export default function Index(props) {
+export default function Index({invoices, resxml}) {
+    console.log(resxml);
+    function exportInvoices(e) {
+        e.preventDefault()
+    }
+
     return (
         <App>
             <div className="row">
-                <div class="col-12">
-                    <div class="ibox ">
-                        <div class="ibox-title">
+                <div className="col-12">
+                    <div className="row my-3">
+                        <div className="col">
+                            {/* <button onClick={route('invoice.export')} type="button" class="btn btn-primary">Pobierz CSV</button> */}
+                            <a className="btn btn-warning float-end" href={ route('invoice.export') }>Export</a>
+                        </div>
+                    </div>
+                    <div className="ibox ">
+                        <div className="ibox-title">
                             <h5>Faktury</h5>
                         </div>
-                        <div class="ibox-content">
-                            <table class="table">
+                        <div className="ibox-content">
+                            <table className="table">
                                 <thead>
                                     <tr>
                                         <th>Nr.</th>
@@ -24,7 +35,7 @@ export default function Index(props) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    { props.invoices.map((invoice) => {
+                                    { invoices.map((invoice) => {
                                         return (
                                             <tr key={invoice.inv_id}>
                                                 <td>{invoice.inv_number}</td>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Allegro\TestController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SkyShop\InvoiceController;
 use Illuminate\Foundation\Application;
@@ -52,6 +53,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/invoice/{invoice}/edit', [InvoiceController::class, 'edit'])->name('invoice.edit');
     Route::patch('/invoice/{invoice}', [InvoiceController::class, 'update'])->name('invoice.update');
     Route::delete('/invoice/{invoice}', [InvoiceController::class, 'destroy'])->name('invoice.destroy');
+    Route::get('/invoice/export', [InvoiceController::class, 'export'])->name('invoice.export');
+
+    // route for allegro
+    Route::get('/allegro', [TestController::class, 'index'])->name('allegro.index');
+    Route::get('/allegro/main', [TestController::class, 'main'])->name('allegro.main');
 });
 
 require __DIR__ . '/auth.php';
