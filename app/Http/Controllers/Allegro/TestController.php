@@ -26,7 +26,7 @@ class TestController extends Controller
         $authorization_redirect_url = env('ALLEGRO_AUTH_URL'). "?response_type=code&client_id=" 
         . env('ALLEGRO_CLIENT_ID') . "&redirect_uri=" . env('ALLEGRO_REDIRECT_URI') . "&code_challenge_method=S256&code_challenge=" . $code_challenge;
         header("Location: $authorization_redirect_url");
-        exit(0);
+        // exit(0);
     }
     
     function getCurl($content) {
@@ -59,11 +59,18 @@ class TestController extends Controller
     function main(Request $request){
         $code_verifier = $this->generateCodeVerifier();
         $access_token = false;
+        if (!$request->has('code')) {
+            $code_challenge = $this->generateCodeChallenge($code_verifier);
+            $authorization_redirect_url = env('ALLEGRO_AUTH_URL'). "?response_type=code&client_id=" 
+            . env('ALLEGRO_CLIENT_ID') . "&redirect_uri=" . env('ALLEGRO_REDIRECT_URI') . "&code_challenge_method=S256&code_challenge=" . $code_challenge;
+            header("Location: $authorization_redirect_url");
+            exit(0);
+        }
+        sleep(3);
         if ($request->has('code')) {
+            echo $request('code');
             $access_token = $this->getAccessToken($request['code'] , $code_verifier);
             echo "access_token = ", $access_token;
-        } else {    
-            $this->getAuthorizationCode($code_verifier);
         }
 
         return Inertia::render('Allegro/Index', [

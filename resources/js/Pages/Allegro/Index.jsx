@@ -30,6 +30,14 @@ export default function Index(props) {
                 </div>
               </div>
             }
+            {props.code && 
+              <div className="row" >
+                <div className="col">
+                  <p>code:</p>
+                  <p>{props.code}</p>
+                </div>
+              </div>
+            }
         </App>
     );
 }
