@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Redirect;
 
 class TestController extends Controller
 {
@@ -25,7 +26,12 @@ class TestController extends Controller
         $code_challenge = $this->generateCodeChallenge($code_verifier);
         $authorization_redirect_url = env('ALLEGRO_AUTH_URL'). "?response_type=code&client_id=" 
         . env('ALLEGRO_CLIENT_ID') . "&redirect_uri=" . env('ALLEGRO_REDIRECT_URI') . "&code_challenge_method=S256&code_challenge=" . $code_challenge;
-        header("Location: $authorization_redirect_url");
+        
+        return Inertia::render('Allegro/Authorization', [
+            'authorization_redirect_url' => $authorization_redirect_url,
+        ]);
+        
+        // header("Location: $authorization_redirect_url");
         // exit(0);
     }
     
@@ -57,24 +63,27 @@ class TestController extends Controller
     
     
     function main(Request $request){
-        $code_verifier = $this->generateCodeVerifier();
-        $access_token = false;
-        if (!$request->has('code')) {
-            $code_challenge = $this->generateCodeChallenge($code_verifier);
-            $authorization_redirect_url = env('ALLEGRO_AUTH_URL'). "?response_type=code&client_id=" 
-            . env('ALLEGRO_CLIENT_ID') . "&redirect_uri=" . env('ALLEGRO_REDIRECT_URI') . "&code_challenge_method=S256&code_challenge=" . $code_challenge;
-            header("Location: $authorization_redirect_url");
-            exit(0);
+        
+        if (!isset($_SESSION['code_verifier'])) {
+            $code_verifier = $this->generateCodeVerifier();
+            $_SESSION['code_verifier'] = $code_verifier;
         }
-        sleep(3);
+
+        
+
+        $access_token = null;
         if ($request->has('code')) {
-            echo $request('code');
-            $access_token = $this->getAccessToken($request['code'] , $code_verifier);
+            mail('ernest.slawinski@gmail.com', 'code', $_SESSION['code_verifier']);
+            $access_token = $this->getAccessToken($request['code'], $_SESSION['code_verifier']);
             echo "access_token = ", $access_token;
+        } else {    
+            mail('ernest.slawinski@gmail.com', 'no code', $_SESSION['code_verifier']);
+            $this->getAuthorizationCode($_SESSION['code_verifier']);
+            sleep(3);
         }
 
         return Inertia::render('Allegro/Index', [
-            'code_verifier' => $code_verifier,
+            'code_verifier' => $_SESSION['code_verifier'],
             'access_token' => $access_token,
         ]);
     }

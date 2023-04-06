@@ -9,9 +9,23 @@ export default function Index(props) {
             <h4>Allegro</h4>
             <div className="row">
               <div className="col">
-                <Link href={route('allegro.main')}>
+                <Link href={route("allegro.main")}>
                   <button className="btn btn-primary">Zaloguj do Allegro</button>
                 </Link>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col">
+                <a href="/allegro/main">
+                  <button className="btn btn-primary">Zaloguj do Allegro</button>
+                </a>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col">
+                <a href="/main">
+                  <button className="btn btn-primary">Zaloguj do Allegro</button>
+                </a>
               </div>
             </div>
             {props.code_verifier && 
